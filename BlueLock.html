@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucien de Villiers — Blue Lock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{--black:#060508;--off:#e8e4f0;--purple:#7c3aed;--violet:#a855f7;--glow:#c084fc;--dim:#1a0f2e;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--black);color:var(--off);font-family:'Cormorant Garamond',serif;overflow-x:hidden;cursor:crosshair;}
+  body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.28;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");}
+
+  .nav{position:fixed;right:20px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:9px;z-index:1000;}
+  .nav-d{width:5px;height:5px;border-radius:50%;background:rgba(168,85,247,.2);border:1px solid rgba(168,85,247,.35);cursor:pointer;transition:all .3s;}
+  .nav-d.on{background:var(--violet);box-shadow:0 0 10px var(--violet);transform:scale(1.5);}
+
+  .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 20% 55%,rgba(124,58,237,.13) 0%,transparent 55%),radial-gradient(ellipse at 80% 25%,rgba(168,85,247,.07) 0%,transparent 50%),radial-gradient(ellipse at 50% 95%,rgba(46,16,101,.35) 0%,transparent 60%);}
+  .hero-ghost{position:absolute;font-family:'Bebas Neue',sans-serif;font-size:clamp(90px,20vw,300px);color:rgba(168,85,247,.025);letter-spacing:-.02em;white-space:nowrap;user-select:none;pointer-events:none;animation:drift 10s ease-in-out infinite;}
+  .hero-ghost.g2{bottom:-50px;right:-20px;animation-delay:-5s;color:rgba(124,58,237,.02);}
+  .hero-num{position:absolute;font-family:'Bebas Neue',sans-serif;font-size:clamp(180px,32vw,520px);color:rgba(124,58,237,.04);line-height:1;user-select:none;pointer-events:none;right:-20px;bottom:-80px;animation:drift 14s ease-in-out infinite;animation-delay:-3s;}
+  @keyframes drift{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-18px) rotate(0deg);}}
+  .hero-badge{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.45em;color:var(--violet);border:1px solid rgba(168,85,247,.4);padding:5px 16px;margin-bottom:38px;animation:up .7s ease forwards;opacity:0;position:relative;z-index:1;}
+  .hero-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,10vw,140px);letter-spacing:.06em;line-height:.88;text-align:center;position:relative;z-index:1;animation:up .7s .12s ease forwards;opacity:0;}
+  .hero-name em{display:block;color:var(--violet);font-style:normal;text-shadow:0 0 60px rgba(168,85,247,.5);}
+  .hero-sub{font-family:'Space Mono',monospace;font-size:clamp(8px,1.1vw,11px);letter-spacing:.24em;color:rgba(232,228,240,.3);margin-top:30px;text-align:center;animation:up .7s .26s ease forwards;opacity:0;position:relative;z-index:1;}
+  .scroll-hint{position:absolute;bottom:38px;display:flex;flex-direction:column;align-items:center;gap:8px;animation:up .7s .5s ease forwards;opacity:0;z-index:1;}
+  .scroll-hint span{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.35em;color:rgba(255,255,255,.18);}
+  .scroll-line{width:1px;height:56px;background:linear-gradient(to bottom,rgba(168,85,247,.7),transparent);animation:pulse-line 1.6s 1s infinite;}
+  @keyframes pulse-line{0%,100%{opacity:1;}50%{opacity:.15;}}
+  @keyframes up{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+  .reveal-left{opacity:0;transform:translateX(-20px);transition:opacity .65s ease,transform .65s ease;}
+  .reveal-left.in{opacity:1;transform:translateX(0);}
+  .wrap{max-width:900px;margin:0 auto;padding:0 28px;}
+  .section{padding:96px 0;}
+  hr.divider{border:none;border-top:1px solid rgba(168,85,247,.12);max-width:900px;margin:0 auto;}
+
+  .ch-row{display:flex;align-items:center;gap:18px;margin-bottom:10px;}
+  .ch-num{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.3em;color:var(--violet);flex-shrink:0;}
+  .ch-line{flex:1;height:1px;background:rgba(168,85,247,.2);}
+  .ch-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,5vw,56px);letter-spacing:.04em;line-height:1;margin-bottom:34px;}
+  .ch-title em{color:var(--violet);font-style:normal;}
+
+  .prose{font-size:clamp(15px,1.8vw,18px);line-height:1.84;color:rgba(232,228,240,.76);margin-bottom:26px;font-weight:300;letter-spacing:.01em;}
+  .prose em{color:var(--off);font-style:italic;}
+
+  .bq{border-left:2px solid var(--violet);padding:18px 28px;margin:36px 0;background:rgba(124,58,237,.05);}
+  .bq p{font-size:clamp(15px,1.8vw,19px);line-height:1.7;color:rgba(232,228,240,.7);font-style:italic;font-weight:300;}
+  .bq-attr{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.22em;color:rgba(168,85,247,.5);margin-top:12px;}
+
+  .callout{border:1px solid rgba(168,85,247,.2);padding:24px 28px;margin:32px 0;background:rgba(46,16,101,.14);position:relative;}
+  .callout::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--purple);}
+  .callout-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.3em;color:var(--violet);margin-bottom:10px;}
+  .callout p{font-size:clamp(14px,1.7vw,17px);line-height:1.78;color:rgba(232,228,240,.72);font-weight:300;}
+  .callout p em{color:var(--violet);font-style:italic;}
+
+  .pull{text-align:center;padding:50px 20px;margin:36px 0;}
+  .pull p{font-size:clamp(20px,3.5vw,36px);line-height:1.35;color:var(--off);font-style:italic;font-weight:300;letter-spacing:.02em;}
+  .pull-attr{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.3em;color:rgba(168,85,247,.45);margin-top:18px;}
+
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:2px;margin:32px 0;border:1px solid rgba(168,85,247,.15);}
+  .stat-cell{padding:20px 16px;background:rgba(46,16,101,.1);border:1px solid rgba(168,85,247,.07);text-align:center;transition:background .3s;}
+  .stat-cell:hover{background:rgba(124,58,237,.1);}
+  .stat-val{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--violet);line-height:1;display:block;}
+  .stat-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.28em;color:rgba(232,228,240,.3);margin-top:5px;display:block;}
+
+  .skill-row{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+  .skill-name{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;color:rgba(232,228,240,.45);min-width:116px;}
+  .skill-track{flex:1;height:2px;background:rgba(168,85,247,.1);overflow:hidden;}
+  .skill-fill{height:100%;background:linear-gradient(to right,var(--purple),var(--violet));box-shadow:0 0 8px rgba(168,85,247,.5);transform:scaleX(0);transform-origin:left;transition:transform 1.2s cubic-bezier(.16,1,.3,1);}
+  .skill-num{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--violet);min-width:30px;text-align:right;}
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start;margin:32px 0;}
+  @media(max-width:640px){.two-col{grid-template-columns:1fr;}}
+  .char-cell{padding:18px 20px;background:rgba(46,16,101,.1);border:1px solid rgba(168,85,247,.12);}
+  .char-label{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.32em;color:rgba(168,85,247,.55);margin-bottom:8px;}
+  .char-val{font-size:clamp(13px,1.6vw,16px);color:var(--off);font-weight:300;line-height:1.55;}
+  .char-val em{color:var(--violet);font-style:normal;font-weight:600;}
+
+  .timeline{margin:32px 0;position:relative;}
+  .timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,rgba(168,85,247,.3),transparent);}
+  .tl-item{padding:0 0 28px 26px;position:relative;opacity:0;transform:translateX(-14px);transition:opacity .5s ease,transform .5s ease;}
+  .tl-item::before{content:'';position:absolute;left:-4px;top:5px;width:9px;height:9px;border-radius:50%;background:var(--black);border:2px solid var(--violet);box-shadow:0 0 8px rgba(168,85,247,.5);}
+  .tl-year{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.28em;color:var(--violet);margin-bottom:5px;}
+  .tl-text{font-size:clamp(13px,1.6vw,16px);line-height:1.7;color:rgba(232,228,240,.68);font-weight:300;}
+  .tl-text em{color:var(--off);font-style:italic;}
+
+  .family-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:2px;margin:32px 0;}
+  .fc{padding:22px 18px;background:rgba(46,16,101,.08);border:1px solid rgba(168,85,247,.1);transition:background .3s,border-color .3s;}
+  .fc:hover{background:rgba(124,58,237,.1);border-color:rgba(168,85,247,.25);}
+  .fc-name{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.05em;color:var(--off);line-height:1;margin-bottom:3px;}
+  .fc-role{font-family:'Space Mono',monospace;font-size:7px;letter-spacing:.28em;color:var(--violet);margin-bottom:10px;}
+  .fc-desc{font-size:12px;line-height:1.65;color:rgba(232,228,240,.55);font-weight:300;}
+  .fc-desc em{color:var(--off);font-style:italic;}
+
+  .contra-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:32px 0;}
+  @media(max-width:580px){.contra-grid{grid-template-columns:1fr;}}
+  .contra-cell{padding:18px 20px;background:rgba(46,16,101,.08);border:1px solid rgba(168,85,247,.1);}
+  .contra-title{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.28em;color:var(--violet);margin-bottom:8px;}
+  .contra-body{font-size:13px;line-height:1.65;color:rgba(232,228,240,.6);font-weight:300;}
+
+  .shadow-box{border:1px solid rgba(168,85,247,.18);padding:26px 30px;margin:32px 0;background:rgba(6,5,8,.8);position:relative;overflow:hidden;}
+  .shadow-box::before{content:'ADRIEN';position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:80px;color:rgba(168,85,247,.03);pointer-events:none;user-select:none;}
+  .shadow-box p{font-size:clamp(14px,1.6vw,16px);line-height:1.78;color:rgba(232,228,240,.62);font-weight:300;position:relative;z-index:1;}
+  .shadow-box p em{color:rgba(168,85,247,.85);font-style:italic;}
+
+  .obj-item{display:flex;gap:16px;align-items:flex-start;padding:16px 0;border-bottom:1px solid rgba(168,85,247,.1);}
+  .obj-num{font-family:'Bebas Neue',sans-serif;font-size:26px;color:rgba(168,85,247,.28);line-height:1;flex-shrink:0;min-width:30px;}
+  .obj-text{font-size:clamp(14px,1.6vw,16px);line-height:1.7;color:rgba(232,228,240,.72);font-weight:300;padding-top:4px;}
+  .obj-text strong{color:var(--off);font-weight:600;}
+
+  .foot{padding:60px 0 40px;text-align:center;border-top:1px solid rgba(168,85,247,.1);}
+  .foot-tag{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.4em;color:rgba(168,85,247,.35);margin-bottom:14px;}
+  .foot-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,10vw,120px);letter-spacing:.1em;color:rgba(168,85,247,.07);line-height:1;}
+
+  /* ═══ FICHA RPG ═══ */
+  .ficha-section{padding:80px 0 100px;}
+  .ficha-wrap{max-width:960px;margin:0 auto;padding:0 28px;}
+  .ficha-title-block{text-align:center;margin-bottom:56px;}
+  .ficha-super{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.5em;color:var(--violet);margin-bottom:12px;}
+  .ficha-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,7vw,88px);letter-spacing:.06em;color:var(--off);}
+  .ficha-title em{color:var(--violet);font-style:normal;}
+  .ficha-divider{width:80px;height:1px;background:linear-gradient(to right,transparent,var(--violet),transparent);margin:16px auto 0;}
+  .section-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.4em;color:rgba(168,85,247,.5);margin-bottom:14px;}
+
+  /* CARACTERÍSTICAS */
+  .carac-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-bottom:40px;}
+  @media(max-width:600px){.carac-grid{grid-template-columns:repeat(2,1fr);}}
+  .carac-card{background:rgba(46,16,101,.12);border:1px solid rgba(168,85,247,.18);padding:18px 14px;position:relative;overflow:hidden;transition:background .3s;}
+  .carac-card:hover{background:rgba(46,16,101,.2);}
+  .carac-name{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:.06em;color:var(--off);margin-bottom:10px;}
+  .carac-stars{display:flex;gap:4px;margin-bottom:9px;flex-wrap:wrap;}
+  .star{width:13px;height:13px;cursor:pointer;transition:transform .15s;flex-shrink:0;}
+  .star:hover{transform:scale(1.2);}
+  .star svg{width:100%;height:100%;}
+  .star.filled .sp{fill:var(--violet);filter:drop-shadow(0 0 3px rgba(168,85,247,.7));}
+  .star.empty .sp{fill:none;stroke:rgba(168,85,247,.3);stroke-width:1.5;}
+  .carac-level{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.25em;color:rgba(168,85,247,.5);margin-bottom:6px;}
+  .carac-level span{color:var(--violet);font-weight:700;}
+  .carac-desc{font-size:11px;line-height:1.55;color:rgba(232,228,240,.4);font-weight:300;}
+
+  /* HABILIDADES */
+  .hab-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:40px;}
+  @media(max-width:640px){.hab-grid{grid-template-columns:1fr;}}
+  .hab-block{background:rgba(46,16,101,.08);border:1px solid rgba(168,85,247,.12);}
+  .hab-head{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.35em;color:var(--violet);padding:9px 12px;border-bottom:1px solid rgba(168,85,247,.1);background:rgba(46,16,101,.15);}
+  .hab-table{width:100%;border-collapse:collapse;}
+  .hab-table thead tr{border-bottom:1px solid rgba(168,85,247,.08);}
+  .hab-table thead th{font-family:'Space Mono',monospace;font-size:7px;letter-spacing:.25em;color:rgba(168,85,247,.35);padding:6px 10px;text-align:left;font-weight:400;}
+  .hab-table thead th:nth-child(3),.hab-table td:nth-child(3){text-align:center;width:50px;}
+  .hab-table thead th:last-child,.hab-table td:last-child{text-align:center;width:44px;}
+  .hab-table tbody tr{border-bottom:1px solid rgba(168,85,247,.05);transition:background .2s;}
+  .hab-table tbody tr:hover{background:rgba(124,58,237,.05);}
+  .hab-table td{font-size:12px;padding:6px 10px;color:rgba(232,228,240,.7);font-weight:300;font-family:'Cormorant Garamond',serif;}
+  .hab-table td:nth-child(2){font-family:'Space Mono',monospace;font-size:8px;color:rgba(168,85,247,.5);letter-spacing:.1em;}
+  .hab-table td:last-child{font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--violet);letter-spacing:.05em;}
+  .t-input{font-family:'Space Mono',monospace;font-size:9px;color:rgba(168,85,247,.8);background:transparent;border:none;border-bottom:1px solid rgba(168,85,247,.25);width:26px;text-align:center;outline:none;cursor:text;}
+  .t-input:focus{border-bottom-color:var(--violet);}
+
+  /* ABILITY CARDS */
+  .ability-grid{display:grid;grid-template-columns:1fr;gap:3px;margin-bottom:40px;}
+  .ability-card{background:rgba(46,16,101,.1);border:1px solid rgba(168,85,247,.15);padding:20px 22px;position:relative;}
+  .ability-card.arma{border-color:rgba(168,85,247,.38);background:rgba(46,16,101,.22);}
+  .ability-card.arma::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--purple),var(--violet));}
+  .ability-card.defeito{border-color:rgba(168,85,247,.12);background:rgba(6,5,8,.5);}
+  .ability-type{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.35em;color:rgba(168,85,247,.45);margin-bottom:5px;}
+  .ability-name{font-family:'Bebas Neue',sans-serif;font-size:21px;letter-spacing:.04em;color:var(--off);margin-bottom:10px;}
+  .ability-name em{color:var(--violet);font-style:normal;}
+  .ability-text{font-size:clamp(13px,1.5vw,15px);line-height:1.75;color:rgba(232,228,240,.68);font-weight:300;}
+  .ability-text strong{color:var(--violet);}
+
+  /* OBJETIVOS */
+  .obj-table{width:100%;border-collapse:collapse;margin-bottom:40px;border:1px solid rgba(168,85,247,.12);}
+  .obj-table thead th{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.3em;color:rgba(168,85,247,.4);padding:9px 12px;text-align:left;border-bottom:1px solid rgba(168,85,247,.12);font-weight:400;background:rgba(46,16,101,.12);}
+  .obj-table thead th:last-child{text-align:center;width:70px;}
+  .obj-table tbody tr{border-bottom:1px solid rgba(168,85,247,.06);transition:background .2s;}
+  .obj-table tbody tr:hover{background:rgba(124,58,237,.04);}
+  .obj-table td{padding:10px 12px;color:rgba(232,228,240,.7);font-weight:300;font-size:clamp(13px,1.5vw,15px);}
+  .obj-table td:first-child{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.2em;color:var(--violet);white-space:nowrap;width:90px;}
+  .obj-table td:last-child{text-align:center;}
+  .d-input{background:transparent;border:none;border-bottom:1px solid rgba(168,85,247,.18);color:rgba(232,228,240,.75);font-family:'Cormorant Garamond',serif;font-size:clamp(13px,1.5vw,15px);font-weight:300;width:100%;outline:none;cursor:text;}
+  .d-input:focus{border-bottom-color:var(--violet);}
+  .circ{width:15px;height:15px;border-radius:50%;border:1.5px solid rgba(168,85,247,.4);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .2s;}
+  .circ.on{background:var(--violet);border-color:var(--violet);box-shadow:0 0 7px rgba(168,85,247,.6);}
+  .circ.on::after{content:'';width:5px;height:5px;border-radius:50%;background:white;}
+
+  /* MODIFICADORES */
+  .mod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-bottom:40px;}
+  @media(max-width:580px){.mod-grid{grid-template-columns:1fr;}}
+  .mod-card{background:rgba(46,16,101,.1);border:1px solid rgba(168,85,247,.15);}
+  .mod-head{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.3em;color:var(--violet);padding:9px 14px;border-bottom:1px solid rgba(168,85,247,.1);background:rgba(46,16,101,.18);}
+  .mod-body{padding:14px 14px;}
+  .mod-main{display:flex;align-items:baseline;gap:6px;margin-bottom:10px;}
+  .mod-slash{font-family:'Bebas Neue',sans-serif;font-size:26px;color:rgba(168,85,247,.25);}
+  .m-input{font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--violet);background:transparent;border:none;border-bottom:2px solid rgba(168,85,247,.22);width:52px;outline:none;cursor:text;line-height:1;}
+  .m-input:focus{border-bottom-color:var(--violet);}
+  .m-input.dim{color:rgba(232,228,240,.65);}
+  .mod-sub-row{display:flex;align-items:center;gap:8px;}
+  .mod-sub-label{font-family:'Space Mono',monospace;font-size:7px;letter-spacing:.25em;color:rgba(168,85,247,.35);}
+  .m-sub{font-family:'Space Mono',monospace;font-size:11px;color:rgba(232,228,240,.55);background:transparent;border:none;border-bottom:1px solid rgba(168,85,247,.18);width:36px;outline:none;cursor:text;text-align:center;}
+  .m-sub:focus{border-bottom-color:var(--violet);}
+
+  /* LACOS */
+  .lacos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-bottom:20px;}
+  @media(max-width:600px){.lacos-grid{grid-template-columns:1fr;}}
+  .laco-card{background:rgba(46,16,101,.08);border:1px solid rgba(168,85,247,.1);}
+  .laco-head{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.35em;color:var(--violet);padding:9px 12px;border-bottom:1px solid rgba(168,85,247,.08);background:rgba(46,16,101,.18);}
+  .laco-table{width:100%;border-collapse:collapse;}
+  .laco-table thead th{font-family:'Space Mono',monospace;font-size:7px;letter-spacing:.22em;color:rgba(168,85,247,.3);padding:6px 10px;text-align:left;font-weight:400;border-bottom:1px solid rgba(168,85,247,.06);}
+  .laco-table thead th:last-child{text-align:center;width:46px;}
+  .laco-table tbody tr{border-bottom:1px solid rgba(168,85,247,.04);}
+  .laco-table tbody tr:hover{background:rgba(124,58,237,.03);}
+  .laco-table td{padding:6px 10px;font-size:11px;color:rgba(232,228,240,.6);font-weight:300;}
+  .laco-table td:last-child{text-align:center;}
+  .l-input{background:transparent;border:none;border-bottom:1px solid rgba(168,85,247,.12);color:rgba(232,228,240,.7);font-family:'Cormorant Garamond',serif;font-size:12px;font-weight:300;width:100%;outline:none;cursor:text;}
+  .l-input:focus{border-bottom-color:var(--violet);}
+  .laco-num{font-family:'Space Mono',monospace;font-size:11px;color:rgba(232,228,240,.7);background:transparent;border:none;border-bottom:1px solid rgba(168,85,247,.18);width:46px;outline:none;cursor:text;text-align:center;}
+  .laco-num:focus{border-bottom-color:var(--violet);}
+  .l-input::placeholder{color:rgba(168,85,247,.18);}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-d on" onclick="goTo('hero')"></div>
+  <div class="nav-d" onclick="goTo('s1')"></div>
+  <div class="nav-d" onclick="goTo('s2')"></div>
+  <div class="nav-d" onclick="goTo('s3')"></div>
+  <div class="nav-d" onclick="goTo('s4')"></div>
+  <div class="nav-d" onclick="goTo('s5')"></div>
+  <div class="nav-d" onclick="goTo('s6')"></div>
+  <div class="nav-d" onclick="goTo('s7')"></div>
+  <div class="nav-d" onclick="goTo('s8')"></div>
+  <div class="nav-d" onclick="goTo('ficha')"></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-ghost" style="top:-40px;left:-30px;">DRIBBLE</div>
+  <div class="hero-ghost g2">INVISIBLE</div>
+  <div class="hero-num">8</div>
+  <div class="hero-badge">BLUE LOCK · CAMISA Nº 8 · LYON, FRANCE</div>
+  <h1 class="hero-name">LUCIEN<em>DE VILLIERS</em></h1>
+  <p class="hero-sub">MEI · DRIBLADOR · FRANCÊS · 1,70M · 15 ANOS<br>— NÃO PRECISO DE PERMISSÃO PARA EXISTIR —</p>
+  <div class="scroll-hint"><span>SCROLL</span><div class="scroll-line"></div></div>
+</section>
+<hr class="divider">
+
+<!-- I — FICHA -->
+<section class="section" id="s1">
+  <div class="wrap">
+    <div class="ch-row reveal"><span class="ch-num">I</span><div class="ch-line"></div></div>
+    <h2 class="ch-title reveal">Ficha do <em>Jogador</em></h2>
+    <div class="stats-grid reveal">
+      <div class="stat-cell"><span class="stat-val">1,70</span><span class="stat-label">ALTURA (m)</span></div>
+      <div class="stat-cell"><span class="stat-val">15</span><span class="stat-label">IDADE</span></div>
+      <div class="stat-cell"><span class="stat-val">MEI</span><span class="stat-label">POSIÇÃO</span></div>
+      <div class="stat-cell"><span class="stat-val">#8</span><span class="stat-label">CAMISA</span></div>
+      <div class="stat-cell"><span class="stat-val">FR</span><span class="stat-label">PAÍS</span></div>
+      <div class="stat-cell"><span class="stat-val">LYO</span><span class="stat-label">ORIGEM</span></div>
+    </div>
+    <div class="two-col reveal">
+      <div>
+        <div class="char-cell" style="margin-bottom:3px"><div class="char-label">FERIDA CENTRAL</div><div class="char-val">Sentir que sempre <em>precisa justificar</em> o próprio lugar.</div></div>
+        <div class="char-cell"><div class="char-label">MEDO CENTRAL</div><div class="char-val">Ser <em>apenas tolerado</em> — nunca realmente escolhido.</div></div>
+      </div>
+      <div>
+        <div class="char-cell" style="margin-bottom:3px"><div class="char-label">DESEJO CENTRAL</div><div class="char-val">Tornar-se <em>impossível de ignorar</em>.</div></div>
+        <div class="char-cell"><div class="char-label">TRAÇO FÍSICO</div><div class="char-val">Cabelo preto, mechas roxas. Olhos azul-escuro. Brinco de cruz.</div></div>
+      </div>
+    </div>
+    <div class="reveal" style="margin-top:32px">
+      <p class="section-label">ATRIBUTOS</p>
+      <div class="skill-row"><span class="skill-name">DRIBLE</span><div class="skill-track"><div class="skill-fill" data-w=".97"></div></div><span class="skill-num">97</span></div>
+      <div class="skill-row"><span class="skill-name">CRIATIVIDADE</span><div class="skill-track"><div class="skill-fill" data-w=".95"></div></div><span class="skill-num">95</span></div>
+      <div class="skill-row"><span class="skill-name">CONTROLE</span><div class="skill-track"><div class="skill-fill" data-w=".93"></div></div><span class="skill-num">93</span></div>
+      <div class="skill-row"><span class="skill-name">VELOCIDADE</span><div class="skill-track"><div class="skill-fill" data-w=".84"></div></div><span class="skill-num">84</span></div>
+      <div class="skill-row"><span class="skill-name">DISCIPLINA</span><div class="skill-track"><div class="skill-fill" data-w=".90"></div></div><span class="skill-num">90</span></div>
+      <div class="skill-row"><span class="skill-name">VISÃO</span><div class="skill-track"><div class="skill-fill" data-w=".75"></div></div><span class="skill-num">75</span></div>
+      <div class="skill-row"><span class="skill-name">HAB. SOCIAL</span><div class="skill-track"><div class="skill-fill" data-w=".32"></div></div><span class="skill-num">32</span></div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- II — ORIGEM -->
+<section class="section" id="s2">
+  <div class="wrap">
+    <div class="ch-row reveal"><span class="ch-num">II</span><div class="ch-line"></div></div>
+    <h2 class="ch-title reveal">Antes de <em>tudo.</em></h2>
+    <p class="prose reveal">Lucien de Villiers nasceu em Lyon, França, e passou os primeiros seis anos de vida em uma casa de acolhimento. Dessa fase, guardou poucas memórias nítidas — cheiro de desinfetante, lençóis ásperos, portas que abriam e fechavam. O suficiente para aprender cedo que tudo podia ser temporário.</p>
+    <div class="bq reveal-left">
+      <p>"Qualquer coisa que não precise devolver depois."</p>
+      <div class="bq-attr">— Lucien, 5 anos, quando perguntado o que queria de aniversário</div>
+    </div>
+    <div class="timeline reveal" id="tl1">
+      <div class="tl-item"><div class="tl-year">0–6 ANOS · ORFANATO — LYON</div><div class="tl-text">As crianças aprendiam a não criar expectativas. Algumas iam embora. Outras voltavam. Algumas eram escolhidas. Outras não. Lucien cresceu com a sensação silenciosa de que precisava <em>dar pouco trabalho</em> para continuar sendo aceito.</div></div>
+      <div class="tl-item"><div class="tl-year">6 ANOS · ADOÇÃO — FAMÍLIA DE VILLIERS</div><div class="tl-text">Trocou a instabilidade do abandono por um vazio diferente: uma casa luxuosa e emocionalmente fria. Jean era correto e distante. Claire era elegante e inacessível. Ofereceram tudo que dinheiro podia comprar — exceto <em>presença, constância e afeto sem cerimônia</em>.</div></div>
+      <div class="tl-item"><div class="tl-year">8–10 ANOS · A ARTE DE DESAPARECER</div><div class="tl-text">Lucien aprendeu a mover-se em silêncio, decorar rotinas, saber quando sumir. Construiu a parte mais perigosa da personalidade dele: <em>não expressa dor no momento em que acontece. Guarda, organiza e transforma em combustível.</em></div></div>
+      <div class="tl-item"><div class="tl-year">9 ANOS · O FUTEBOL</div><div class="tl-text">Um campo público. Ali ninguém se importava com sobrenome. Foi a primeira coisa na vida que não exigiu que ele fosse <em>"aceitável"</em> antes de ser visto. Quando o pararam de rir e começaram a respeitar, ele sentiu uma forma limpa de existir.</div></div>
+      <div class="tl-item"><div class="tl-year">14 ANOS · SAÍDA — DECATUR, ILLINOIS</div><div class="tl-text">A primeira vez que Lucien escolheu sair. Jean e Claire aprovaram, pagaram. Lucien odiou perceber que ainda dependia deles para ir embora — que toda conquista viria contaminada por uma ajuda que ele não queria precisar.</div></div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- III — ADRIEN -->
+<section class="section" id="s3">
+  <div class="wrap">
+    <div class="ch-row reveal"><span class="ch-num">III</span><div class="ch-line"></div></div>
+    <h2 class="ch-title reveal"><em>Adrien.</em> A sombra.</h2>
+    <p class="prose reveal">A família já tinha um filho. Adrien de Villiers. Dois anos mais velho. Bonito, articulado, excelente em ambientes sociais. Tudo que a família entendia como sucesso. Adrien não batia o tempo todo. Às vezes fazia algo pior.</p>
+    <div class="shadow-box reveal">
+      <p>Adrien fazia Lucien se sentir pequeno <em>de forma inteligente</em>. Comentários baixos. Sorrisos falsos. Comparações. Quando Lucien derrubou água em um jantar, Adrien se inclinou: <em>"É impressionante como você consegue estragar uma sala só entrando nela."</em><br><br>Lucien não chorou. Mas naquela noite passou mais de uma hora treinando como segurar um copo do jeito "certo". Esse detalhe importa: <em>ele transforma humilhação em disciplina.</em></p>
+    </div>
+    <div class="callout reveal">
+      <div class="callout-label">A COMPLEXIDADE DE ADRIEN</div>
+      <p>Adrien talvez tenha percebido que os pais nunca foram afetuosos nem com ele. Em vez de lidar com isso, escolheu proteger o território atacando Lucien. Os dois cresceram em uma casa emocionalmente falha e reagiram de formas opostas. <em>Adrien vê Lucien como invasão. Lucien vê Adrien como tudo que lhe foi negado.</em></p>
+    </div>
+    <div class="bq reveal-left">
+      <p>"Você não pertence aqui.<br>Você é só um substituto barato."</p>
+      <div class="bq-attr">— Adrien de Villiers, infância</div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- IV — FUTEBOL -->
+<section class="section" id="s4">
+  <div class="wrap">
+    <div class="ch-row reveal"><span class="ch-num">IV</span><div class="ch-line"></div></div>
+    <h2 class="ch-title reveal">O Drible como <em>Existência</em></h2>
+    <div class="contra-grid reveal">
+      <div class="contra-cell"><div class="contra-title">LINGUAGEM</div><div class="contra-body">O lugar onde ele consegue dizer tudo que não verbaliza. O silêncio desaparece quando ele toca na bola.</div></div>
+      <div class="contra-cell"><div class="contra-title">JUSTIÇA</div><div class="contra-body">No campo, sobrenome importa menos que execução. A meritocracia aqui é real — e ele acredita profundamente nisso.</div></div>
+      <div class="contra-cell"><div class="contra-title">VINGANÇA</div><div class="contra-body">Cada drible é uma resposta ao desprezo acumulado. Cada jogada criativa é uma declaração de existência.</div></div>
+      <div class="contra-cell" style="border-color:rgba(168,85,247,.25);background:rgba(46,16,101,.18)"><div class="contra-title">RISCO IDENTITÁRIO</div><div class="contra-body">Sem o futebol, Lucien talvez não soubesse quem é além da rejeição. Se ele machucar, falhar ou perder o futebol — parte da identidade desaba.</div></div>
+    </div>
+    <div style="margin:32px 0" class="reveal">
+      <p class="section-label">PADRÃO DE DRIBLE — LUCIEN DE VILLIERS · CAMISA 8</p>
+      <div style="border:1px solid rgba(168,85,247,.14);overflow:hidden">
+        <svg viewBox="0 0 700 295" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;background:#06050a">
+          <rect x="18" y="14" width="664" height="267" rx="2" stroke="rgba(168,85,247,.09)" stroke-width="1"/>
+          <line x1="350" y1="14" x2="350" y2="281" stroke="rgba(168,85,247,.05)" stroke-width="1"/>
+          <circle cx="350" cy="147" r="34" stroke="rgba(168,85,247,.05)" stroke-width="1" fill="none"/>
+          <rect x="18" y="101" width="18" height="90" stroke="rgba(168,85,247,.13)" stroke-width="1" fill="rgba(168,85,247,.02)"/>
+          <rect x="664" y="101" width="18" height="90" stroke="rgba(168,85,247,.13)" stroke-width="1" fill="rgba(168,85,247,.02)"/>
+          <rect x="18" y="74" width="84" height="144" stroke="rgba(168,85,247,.05)" stroke-width="1" fill="none"/>
+          <rect x="598" y="74" width="84" height="144" stroke="rgba(168,85,247,.05)" stroke-width="1" fill="none"/>
+          <circle cx="486" cy="114" r="11" fill="rgba(70,70,90,.2)" stroke="rgba(130,130,150,.38)" stroke-width="1"/>
+          <text x="486" y="118" text-anchor="middle" fill="rgba(165,165,185,.65)" font-size="9" font-family="Space Mono,monospace">D</text>
+          <circle cx="526" cy="162" r="11" fill="rgba(70,70,90,.2)" stroke="rgba(130,130,150,.38)" stroke-width="1"/>
+          <text x="526" y="166" text-anchor="middle" fill="rgba(165,165,185,.65)" font-size="9" font-family="Space Mono,monospace">D</text>
+          <circle cx="466" cy="192" r="11" fill="rgba(70,70,90,.2)" stroke="rgba(130,130,150,.38)" stroke-width="1"/>
+          <text x="466" y="196" text-anchor="middle" fill="rgba(165,165,185,.65)" font-size="9" font-family="Space Mono,monospace">D</text>
+          <circle cx="556" cy="120" r="11" fill="rgba(70,70,90,.2)" stroke="rgba(130,130,150,.38)" stroke-width="1"/>
+          <text x="556" y="124" text-anchor="middle" fill="rgba(165,165,185,.65)" font-size="9" font-family="Space Mono,monospace">D</text>
+          <circle cx="616" cy="147" r="12" fill="rgba(50,50,70,.22)" stroke="rgba(110,110,130,.32)" stroke-width="1"/>
+          <text x="616" y="151" text-anchor="middle" fill="rgba(165,165,185,.45)" font-size="8" font-family="Space Mono,monospace">GK</text>
+          <path d="M350 147 C376 140 403 124 440 116 C462 110 470 123 500 133 C518 141 520 155 546 152 C568 150 576 140 600 147 C620 154 638 147 648 147" stroke="rgba(168,85,247,.16)" stroke-width="13" fill="none" stroke-linecap="round"/>
+          <path d="M350 147 C376 140 403 124 440 116 C462 110 470 123 500 133 C518 141 520 155 546 152 C568 150 576 140 600 147 C620 154 638 147 648 147" stroke="rgba(168,85,247,.88)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-dasharray="5 3"/>
+          <polygon points="648,143 664,147 648,151" fill="rgba(168,85,247,.9)"/>
+          <circle cx="440" cy="116" r="3.5" fill="rgba(192,132,252,.6)" stroke="rgba(192,132,252,.9)" stroke-width="1"/>
+          <circle cx="500" cy="133" r="3.5" fill="rgba(192,132,252,.6)" stroke="rgba(192,132,252,.9)" stroke-width="1"/>
+          <circle cx="546" cy="152" r="3.5" fill="rgba(192,132,252,.6)" stroke="rgba(192,132,252,.9)" stroke-width="1"/>
+          <circle cx="350" cy="147" r="13" fill="rgba(124,58,237,.25)" stroke="rgba(168,85,247,1)" stroke-width="2"/>
+          <text x="350" y="151" text-anchor="middle" fill="white" font-size="9" font-family="Bebas Neue,sans-serif" letter-spacing="1">L</text>
+          <text x="350" y="169" text-anchor="middle" fill="rgba(168,85,247,.45)" font-size="7" font-family="Space Mono,monospace">LUCIEN</text>
+          <text x="652" y="140" text-anchor="middle" fill="rgba(192,132,252,.4)" font-size="7" font-family="Space Mono,monospace">GOL</text>
+          <text x="350" y="285" text-anchor="middle" fill="rgba(168,85,247,.22)" font-size="7" font-family="Space Mono,monospace">DRIBLES: 4 · DEF PASSADOS: 4 · ASSISTÊNCIAS: 0</text>
+        </svg>
+      </div>
+    </div>
+    <div class="bq reveal-left">
+      <p>"Você são só obstáculos."</p>
+      <div class="bq-attr">— Lucien de Villiers, em campo</div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- V — CARTER -->
+<section class="section" id="s5">
+  <div class="wrap">
+    <div class="ch-row reveal"><span class="ch-num">V</span><div class="ch-line"></div></div>
+    <h2 class="ch-title reveal">A Família <em>Carter</em></h2>
+    <p class="prose reveal">Na casa dos Carter, Lucien encontrou espontaneidade emocional. Pessoas que existiam umas com as outras <em>sem performance</em>. Isso o desarmou — e o assustou. O afeto sincero, para alguém como Lucien, é mais difícil de aceitar do que a hostilidade. Hostilidade ele entende. Carinho sem cobrança ele não sabe ler.</p>
+    <div class="family-grid reveal">
+      <div class="fc"><div class="fc-name">DAVID</div><div class="fc-role">PAI · MECÂNICO · CONSISTENTE</div><div class="fc-desc">A primeira figura masculina que Lucien respeita sem medo. Simplesmente mantém a palavra. <em>"Garoto, você mora aqui. Não existe atrapalhar quando a casa também é sua."</em></div></div>
+      <div class="fc"><div class="fc-name">MELISSA</div><div class="fc-role">MÃE · "MISSY" · CUIDADO COTIDIANO</div><div class="fc-desc">Pergunta se ele comeu. Percebe quando está exausto. O amor dela não vem acompanhado de expectativa de performance. Isso desorganiza Lucien completamente.</div></div>
+      <div class="fc"><div class="fc-name">JAKE</div><div class="fc-role">IRMÃO · 17 ANOS · ESPELHO INVERTIDO</div><div class="fc-desc">Mais solto e emocionalmente simples. <em>"Você só fica com medo de gostar quando alguém acredita em você."</em> O primeiro amigo de verdade que Lucien teve.</div></div>
+      <div class="fc" style="border-color:rgba(168,85,247,.3);background:rgba(46,16,101,.16)"><div class="fc-name" style="color:var(--violet)">EMILY</div><div class="fc-role" style="color:rgba(192,132,252,.7)">IRMÃ · 12 ANOS · ÂNCORA ★</div><div class="fc-desc">A relação mais pura. Com ela, ele não precisa ser extraordinário. Lucien quer pagar seus estudos — não apenas por bondade, mas como <em>reparação simbólica</em>.</div></div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- VI — PERSONALIDADE -->
+<section class="section" id="s6">
+  <div class="wrap">
+    <div class="ch-row reveal"><span class="ch-num">VI</span><div class="ch-line"></div></div>
+    <h2 class="ch-title reveal">Três <em>Camadas</em></h2>
+    <div class="contra-grid reveal">
+      <div class="contra-cell" style="border-color:rgba(168,85,247,.09)"><div class="contra-title" style="color:rgba(168,85,247,.38)">CAMADA EXTERNA</div><div class="contra-body" style="color:rgba(232,228,240,.45)">Educado · Calmo · Controlado · Elegante até quando cansado · Raramente perde a compostura em público</div></div>
+      <div class="contra-cell" style="border-color:rgba(168,85,247,.18)"><div class="contra-title" style="color:rgba(168,85,247,.55)">INTERMEDIÁRIA</div><div class="contra-body" style="color:rgba(232,228,240,.6)">Sarcástico em momentos específicos · Protetor com quem é "seu" · Desconfortável com afeto aberto · Sente mais do que mostra</div></div>
+      <div class="contra-cell" style="border-color:rgba(168,85,247,.3);background:rgba(46,16,101,.2)"><div class="contra-title">CAMADA INTERNA</div><div class="contra-body">Tem medo de ser descartável · Confunde admiração com amor · Provoca para testar se as pessoas ficam · Inveja quem pertence naturalmente · Quer descanso emocional, mas não sabe aceitar</div></div>
+      <div class="contra-cell" style="border-color:rgba(168,85,247,.14)"><div class="contra-title" style="color:rgba(168,85,247,.42)">CONTRADIÇÃO CENTRAL</div><div class="contra-body" style="color:rgba(232,228,240,.55)">Quer ser visto pelo mundo. Mas quando alguém enxerga suas fragilidades de perto, recua. Quer independência, mas sonha secretamente em ser escolhido sem precisar merecer.</div></div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- VII — OBJETIVOS -->
+<section class="section" id="s7">
+  <div class="wrap">
+    <div class="ch-row reveal"><span class="ch-num">VII</span><div class="ch-line"></div></div>
+    <h2 class="ch-title reveal">O que ele <em>quer</em> vs o que <em>precisa</em></h2>
+    <div class="two-col reveal">
+      <div>
+        <p class="section-label">O QUE QUER</p>
+        <div class="obj-item"><span class="obj-num">01</span><div class="obj-text"><strong>Construir um nome por mérito</strong> — não herança ou caridade.</div></div>
+        <div class="obj-item"><span class="obj-num">02</span><div class="obj-text"><strong>Independência total</strong> — nunca mais depender dos de Villiers.</div></div>
+        <div class="obj-item"><span class="obj-num">03</span><div class="obj-text"><strong>Obrigar Adrien a reconhecê-lo</strong> — não com desprezo. Com respeito.</div></div>
+        <div class="obj-item"><span class="obj-num">04</span><div class="obj-text"><strong>Pagar os estudos de Emily</strong> — com algo completamente seu.</div></div>
+      </div>
+      <div>
+        <p class="section-label">O QUE PRECISA</p>
+        <div class="obj-item"><span class="obj-num" style="color:rgba(192,132,252,.28)">01</span><div class="obj-text" style="color:rgba(232,228,240,.5)">Receber afeto sem suspeitar dele.</div></div>
+        <div class="obj-item"><span class="obj-num" style="color:rgba(192,132,252,.28)">02</span><div class="obj-text" style="color:rgba(232,228,240,.5)">Entender que pertencimento não precisa ser conquistado.</div></div>
+        <div class="obj-item"><span class="obj-num" style="color:rgba(192,132,252,.28)">03</span><div class="obj-text" style="color:rgba(232,228,240,.5)">Separar valor pessoal de performance.</div></div>
+        <div class="obj-item"><span class="obj-num" style="color:rgba(192,132,252,.28)">04</span><div class="obj-text" style="color:rgba(232,228,240,.5)">Escolher quem quer ser — não só contra quem quer vencer.</div></div>
+      </div>
+    </div>
+    <div class="pull reveal">
+      <p>"Enquanto luta para provar que não precisa de ninguém,<br>tudo que teme é nunca pertencer de verdade."</p>
+      <div class="pull-attr">BLUE LOCK · LUCIEN DE VILLIERS · LYON → DECATUR</div>
+    </div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- VIII — RELATOS -->
+<section class="section" id="s8">
+  <div class="wrap">
+    <div class="ch-row reveal"><span class="ch-num">VIII</span><div class="ch-line"></div></div>
+    <h2 class="ch-title reveal">Memórias que <em>formaram</em></h2>
+    <div class="bq reveal-left"><p>Na primeira semana na mansão, Lucien dormiu no chão enrolado em um casaco, porque a cama parecia "boa demais" para ser dele. Ninguém perguntou por quê. Lucien entendeu que conforto e acolhimento não são a mesma coisa.</p><div class="bq-attr">— O casaco · 6 anos</div></div>
+    <div class="bq reveal-left"><p>Tentou tocar um piano da casa. Adrien fechou a tampa: "Nem tudo aqui é para você." Anos depois, Lucien desenvolveu o hábito de tocar na bola com delicadeza antes das partidas — quase como quem pede permissão a algo que nunca o rejeitou.</p><div class="bq-attr">— O piano fechado · 8 anos</div></div>
+    <div class="bq reveal-left"><p>Nos EUA recebeu a primeira quantia de dinheiro própria. Comprou presente para Emily e inventou que "tinha sobrado". Ficou encarando as notas restantes por muito tempo. Não pelo valor — mas porque sentiu que podia começar a existir sem ser sustentado pela sombra de outra pessoa.</p><div class="bq-attr">— O primeiro dinheiro próprio · 15 anos</div></div>
+    <div class="bq reveal-left"><p>"Se eu quiser que me escutem,<br>vou ter que ser extraordinário."</p><div class="bq-attr">— Caderno de Lucien · 11 anos</div></div>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- ═══════════════════════════════════
+     FICHA RPG
+═══════════════════════════════════ -->
+<section class="ficha-section" id="ficha">
+  <div class="ficha-wrap">
+
+    <div class="ficha-title-block reveal">
+      <p class="ficha-super">BLUE LOCK RPG · FICHA DE PERSONAGEM</p>
+      <h2 class="ficha-title">LUCIEN <em>DE VILLIERS</em></h2>
+      <div class="ficha-divider"></div>
+    </div>
+
+    <!-- CARACTERÍSTICAS -->
+    <p class="section-label reveal">CARACTERÍSTICAS</p>
+    <div class="carac-grid reveal">
+      <div class="carac-card">
+        <div class="carac-name">PODER</div>
+        <div class="carac-stars" id="s-poder"></div>
+        <div class="carac-level">Nível: <span id="lv-poder">1</span></div>
+        <div class="carac-desc">Força bruta, preparo físico e competitividade.</div>
+      </div>
+      <div class="carac-card">
+        <div class="carac-name">MENTE</div>
+        <div class="carac-stars" id="s-mente"></div>
+        <div class="carac-level">Nível: <span id="lv-mente">2</span></div>
+        <div class="carac-desc">Leitura, antecipação, precisão.</div>
+      </div>
+      <div class="carac-card">
+        <div class="carac-name">RESILIÊNCIA</div>
+        <div class="carac-stars" id="s-res"></div>
+        <div class="carac-level">Nível: <span id="lv-res">1</span></div>
+        <div class="carac-desc">Fortitude mental, compostura, lidar com pressão.</div>
+      </div>
+      <div class="carac-card">
+        <div class="carac-name">VELOCIDADE</div>
+        <div class="carac-stars" id="s-vel"></div>
+        <div class="carac-level">Nível: <span id="lv-vel">4</span></div>
+        <div class="carac-desc">Reflexos, aceleração, pique.</div>
+      </div>
+    </div>
+
+    <!-- HABILIDADES -->
+    <p class="section-label reveal">HABILIDADES</p>
+    <div class="hab-grid reveal">
+      <div class="hab-block">
+        <div class="hab-head">DEFESA</div>
+        <table class="hab-table"><thead><tr><th>NOME</th><th>CAR</th><th>TREINO</th><th>VALOR</th></tr></thead><tbody>
+          <tr><td>Carrinho</td><td>RES</td><td><input class="t-input" value="" placeholder="—"></td><td>01</td></tr>
+          <tr><td>Desarmar</td><td>MEN</td><td><input class="t-input" value="" placeholder="—"></td><td>02</td></tr>
+          <tr><td>Disputa aérea</td><td>POD</td><td><input class="t-input" value="" placeholder="—"></td><td>01</td></tr>
+          <tr><td>Interceptação</td><td>VEL</td><td><input class="t-input" value="" placeholder="—"></td><td>04</td></tr>
+          <tr><td>Ombro-a-ombro</td><td>RES</td><td><input class="t-input" value="" placeholder="—"></td><td>01</td></tr>
+        </tbody></table>
+      </div>
+      <div class="hab-block">
+        <div class="hab-head">TEMPO DE BOLA</div>
+        <table class="hab-table"><thead><tr><th>NOME</th><th>CAR</th><th>TREINO</th><th>VALOR</th></tr></thead><tbody>
+          <tr><td>Domínio</td><td>MEN</td><td><input class="t-input" value="" placeholder="—"></td><td>02</td></tr>
+          <tr><td>Drible</td><td>VEL</td><td><input class="t-input" value="1" placeholder="—"></td><td>05</td></tr>
+          <tr><td>Segurar</td><td>RES</td><td><input class="t-input" value="" placeholder="—"></td><td>01</td></tr>
+          <tr><td>Toque na frente</td><td>VEL</td><td><input class="t-input" value="" placeholder="—"></td><td>04</td></tr>
+        </tbody></table>
+      </div>
+      <div class="hab-block">
+        <div class="hab-head">FINALIZAÇÃO</div>
+        <table class="hab-table"><thead><tr><th>NOME</th><th>CAR</th><th>TREINO</th><th>VALOR</th></tr></thead><tbody>
+          <tr><td>Cabeceio</td><td>POD</td><td><input class="t-input" value="" placeholder="—"></td><td>01</td></tr>
+          <tr><td>Cobertura</td><td>MEN</td><td><input class="t-input" value="" placeholder="—"></td><td>02</td></tr>
+          <tr><td>Colocado</td><td>RES</td><td><input class="t-input" value="" placeholder="—"></td><td>01</td></tr>
+          <tr><td>Direto</td><td>POD</td><td><input class="t-input" value="" placeholder="—"></td><td>01</td></tr>
+          <tr><td>Último toque</td><td>VEL</td><td><input class="t-input" value="" placeholder="—"></td><td>04</td></tr>
+        </tbody></table>
+      </div>
+      <div class="hab-block">
+        <div class="hab-head">PASSE</div>
+        <table class="hab-table"><thead><tr><th>NOME</th><th>CAR</th><th>TREINO</th><th>VALOR</th></tr></thead><tbody>
+          <tr><td>Calcanhar</td><td>VEL</td><td><input class="t-input" value="" placeholder="—"></td><td>04</td></tr>
+          <tr><td>Cruzamento</td><td>MEN</td><td><input class="t-input" value="" placeholder="—"></td><td>02</td></tr>
+          <tr><td>Profundidade</td><td>MEN</td><td><input class="t-input" value="" placeholder="—"></td><td>02</td></tr>
+          <tr><td>Toque curto</td><td>RES</td><td><input class="t-input" value="" placeholder="—"></td><td>01</td></tr>
+          <tr><td>Toque longo</td><td>POD</td><td><input class="t-input" value="" placeholder="—"></td><td>01</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <!-- HABILIDADES ESPECIAIS -->
+    <p class="section-label reveal">HABILIDADES ESPECIAIS</p>
+    <div class="ability-grid reveal">
+      <div class="ability-card">
+        <div class="ability-type">PASSIVA</div>
+        <div class="ability-name">Velocidade</div>
+        <div class="ability-text">Ao receber um passe ou cruzamento contestado, gaste <strong>1 Reputação</strong>. Até o fim do Destaque, adicione seu <strong>nível de Ego</strong> a todos os testes.</div>
+      </div>
+      <div class="ability-card arma">
+        <div class="ability-type">ARMA SECRETA</div>
+        <div class="ability-name">Faz a <em>Fila</em></div>
+        <div class="ability-text">Ao ativar a passiva de <strong>Velocidade</strong>, gaste <strong>1 Energia</strong>. Até o fim do Destaque, ao fazer um teste de <strong>Drible</strong>, trate seus adversários como se estivessem usando sua menor Característica.</div>
+      </div>
+      <div class="ability-card defeito">
+        <div class="ability-type">DEFEITO</div>
+        <div class="ability-name">Sem Ego</div>
+        <div class="ability-text">Ao ativar sua passiva, role um teste de <strong>Resiliência (DT 9)</strong>. Se falhar, não recebe o bônus de Ego da passiva.<br><br>Perseguir <strong>Interesse Social</strong> ou <strong>Status</strong> tem DT aumentada em 2. Se falhar, perde <strong>1 Reputação</strong>.</div>
+      </div>
+    </div>
+
+    <!-- OBJETIVOS -->
+    <p class="section-label reveal">OBJETIVOS</p>
+    <div class="reveal" style="margin-bottom:40px">
+      <table class="obj-table">
+        <thead><tr><th>CATEGORIA</th><th>DESCRIÇÃO</th><th>ATENÇÃO</th></tr></thead>
+        <tbody>
+          <tr><td>NEGÓCIOS</td><td><input class="d-input" value="Buscar um emprego" placeholder="Adicionar objetivo…"></td><td style="text-align:center"><div class="circ" onclick="this.classList.toggle('on')"></div></td></tr>
+          <tr><td>CAUSAS</td><td><input class="d-input" value="" placeholder="Adicionar objetivo…"></td><td style="text-align:center"><div class="circ" onclick="this.classList.toggle('on')"></div></td></tr>
+          <tr><td>CRIATIVO</td><td><input class="d-input" value="" placeholder="Adicionar objetivo…"></td><td style="text-align:center"><div class="circ" onclick="this.classList.toggle('on')"></div></td></tr>
+          <tr><td>SOCIAL</td><td><input class="d-input" value="Fazer um amigo mais próximo na sala para treinar futebol" placeholder="Adicionar objetivo…"></td><td style="text-align:center"><div class="circ" onclick="this.classList.toggle('on')"></div></td></tr>
+          <tr><td>STATUS</td><td><input class="d-input" value="Começar a publicar vídeos em redes sociais dos seus dribles" placeholder="Adicionar objetivo…"></td><td style="text-align:center"><div class="circ" onclick="this.classList.toggle('on')"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- MODIFICADORES -->
+    <p class="section-label reveal">MODIFICADORES</p>
+    <div class="mod-grid reveal">
+      <div class="mod-card">
+        <div class="mod-head">REPUTAÇÃO</div>
+        <div class="mod-body">
+          <div class="mod-main">
+            <input class="m-input" value="6" maxlength="3">
+            <span class="mod-slash">/</span>
+            <input class="m-input dim" value="6" maxlength="3">
+          </div>
+          <div class="mod-sub-row">
+            <span class="mod-sub-label">NOTORIEDADE</span>
+            <input class="m-sub" value="0">
+          </div>
+        </div>
+      </div>
+      <div class="mod-card">
+        <div class="mod-head">ENERGIA</div>
+        <div class="mod-body">
+          <div class="mod-main">
+            <input class="m-input" value="0" maxlength="3">
+            <span class="mod-slash">/</span>
+            <input class="m-input dim" value="0" maxlength="3">
+          </div>
+          <div class="mod-sub-row">
+            <span class="mod-sub-label">FADIGA</span>
+            <input class="m-sub" value="0">
+          </div>
+        </div>
+      </div>
+      <div class="mod-card">
+        <div class="mod-head">NÍVEL DE EGO</div>
+        <div class="mod-body">
+          <div class="mod-main">
+            <input class="m-input" value="0" maxlength="3">
+          </div>
+          <div class="mod-sub-row">
+            <span class="mod-sub-label">PONTOS DE EGO</span>
+            <input class="m-sub" value="2">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LAÇOS -->
+    <p class="section-label reveal">LAÇOS</p>
+    <div class="lacos-grid reveal">
+      <div class="laco-card">
+        <div class="laco-head">ATACANTES</div>
+        <table class="laco-table"><thead><tr><th>NOME</th><th>LAÇO</th></tr></thead><tbody>
+          <tr><td><input class="l-input" value="Isak Brännström" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="Tristan Bongo" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+        </tbody></table>
+      </div>
+      <div class="laco-card">
+        <div class="laco-head">MEIAS</div>
+        <table class="laco-table"><thead><tr><th>NOME</th><th>LAÇO</th></tr></thead><tbody>
+          <tr><td><input class="l-input" value="Fernando Olivier" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+        </tbody></table>
+      </div>
+      <div class="laco-card">
+        <div class="laco-head">DEFENSORES</div>
+        <table class="laco-table"><thead><tr><th>NOME</th><th>LAÇO</th></tr></thead><tbody>
+          <tr><td><input class="l-input" value="Ivan Petrovich" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+          <tr><td><input class="l-input" value="" placeholder="—"></td><td><input class="laco-num" type="number" min="0" max="10" value="0"></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-tag">BLUE LOCK · LUCIEN DE VILLIERS · LYON, FRANCE · CAMISA #8</div>
+  <div class="foot-name">LUCIEN</div>
+</footer>
+
+<script>
+// STAR SYSTEM
+function buildStars(cid, lvid, init, max) {
+  const c = document.getElementById(cid), lv = document.getElementById(lvid);
+  let cur = init;
+  function render() {
+    c.innerHTML = ''; lv.textContent = cur;
+    for (let i = 1; i <= max; i++) {
+      const s = document.createElement('div');
+      s.className = 'star ' + (i <= cur ? 'filled' : 'empty');
+      s.innerHTML = `<svg viewBox="0 0 20 20"><path class="sp" d="M10 1l2.39 7.26H19l-5.45 4.02 2.08 7.26L10 15.27l-5.63 4.27 2.08-7.26L1 8.26h6.61z"/></svg>`;
+      s.onclick = () => { cur = cur === i ? 0 : i; render(); };
+      c.appendChild(s);
+    }
+  }
+  render();
+}
+buildStars('s-poder','lv-poder',1,7);
+buildStars('s-mente','lv-mente',2,7);
+buildStars('s-res',  'lv-res',  1,7);
+buildStars('s-vel',  'lv-vel',  4,7);
+
+// REVEAL OBSERVER
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('in');
+    e.target.querySelectorAll('.skill-fill[data-w]').forEach(f => { f.style.transform=`scaleX(${f.dataset.w})`; });
+    if (e.target.id && e.target.id.startsWith('tl')) {
+      e.target.querySelectorAll('.tl-item').forEach((el,i) => setTimeout(()=>{el.style.opacity='1';el.style.transform='translateX(0)';},i*160));
+    }
+  });
+},{ threshold:.08, rootMargin:'0px 0px -25px 0px' });
+document.querySelectorAll('.reveal,.reveal-left').forEach(el=>io.observe(el));
+
+const sk = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){const f=e.target.querySelector('.skill-fill');if(f&&f.dataset.w)f.style.transform=`scaleX(${f.dataset.w})`;} });
+},{threshold:.4});
+document.querySelectorAll('.skill-row').forEach(el=>sk.observe(el));
+
+document.querySelectorAll('.tl-item').forEach(el=>{el.style.opacity='0';el.style.transform='translateX(-14px)';el.style.transition='opacity .5s ease,transform .5s ease';});
+
+// NAV
+function goTo(id){document.getElementById(id)?.scrollIntoView({behavior:'smooth'});}
+const sids=['hero','s1','s2','s3','s4','s5','s6','s7','s8','ficha'];
+const dots=document.querySelectorAll('.nav-d');
+const sio=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){const i=sids.indexOf(e.target.id);if(i>=0){dots.forEach(d=>d.classList.remove('on'));if(dots[i])dots[i].classList.add('on');}}});
+},{threshold:.38});
+sids.forEach(id=>{const el=document.getElementById(id);if(el)sio.observe(el);});
+
+// PARTICLES
+document.addEventListener('click',e=>{
+  if(e.target.closest('input,.circ,.star'))return;
+  for(let i=0;i<5;i++){
+    const p=document.createElement('div');
+    p.style.cssText=`position:fixed;left:${e.clientX}px;top:${e.clientY}px;width:4px;height:4px;background:rgba(168,85,247,${.6+Math.random()*.4});border-radius:50%;pointer-events:none;z-index:10000;box-shadow:0 0 5px rgba(168,85,247,.8);transition:all .6s ease;`;
+    document.body.appendChild(p);
+    const a=(i/5)*Math.PI*2,d=25+Math.random()*35;
+    setTimeout(()=>{p.style.transform=`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px)`;p.style.opacity='0';},10);
+    setTimeout(()=>p.remove(),680);
+  }
+});
+</script>
+</body>
+</html>
